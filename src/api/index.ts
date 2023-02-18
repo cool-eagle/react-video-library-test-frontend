@@ -1,0 +1,19 @@
+import axios from "axios";
+import { videoURL } from "./URL";
+import { Video } from "./../interfaces/video";
+
+const host = "http://localhost:3100";
+const apiClient = axios.create({
+  baseURL: host,
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  },
+});
+
+export default apiClient;
+
+export const deleteVideo = (id: number) =>
+  apiClient.delete(`${videoURL.deleteVideo}/${id}`);
+export const createVideo = (params: Video) =>
+  apiClient.post(videoURL.createVideo, params);
