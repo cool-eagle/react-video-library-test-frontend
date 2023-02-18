@@ -1,5 +1,5 @@
 export interface Video {
-  id: number;
+  video_id: number;
   name: string;
   description: string;
   poster_path: string;

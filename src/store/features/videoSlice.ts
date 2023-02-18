@@ -31,7 +31,7 @@ export const videoSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getVideo.fulfilled, (state, action) => {
-      state.videos = action.payload;
+      state.videos = action.payload.data;
       state.loading = false;
     });
     builder.addCase(getVideo.pending, (state) => {
