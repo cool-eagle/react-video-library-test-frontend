@@ -10,12 +10,12 @@ import VideoItem from "./../components/VideoItem";
 import { toast } from "react-toastify";
 import { Oval } from "react-loader-spinner";
 
-interface categoryItem {
+interface CategoryItem {
   id: number;
   name: string;
 }
 
-const categoryItems: categoryItem[] = [
+const categoryItems: CategoryItem[] = [
   { id: 0, name: "All" },
   { id: 12, name: "Adventure" },
   { id: 14, name: "Fantasy" },
@@ -122,7 +122,7 @@ const HomePage = () => {
         strokeWidthSecondary={5}
       />
       <section className="flex flex-col">
-        {categoryItems.map((categoryItem: categoryItem) => (
+        {categoryItems.map((categoryItem: CategoryItem) => (
           <div
             key={categoryItem.id}
             onClick={() => categoryHandler(categoryItem.id)}

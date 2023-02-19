@@ -1,5 +1,5 @@
 export const videoURL = {
   getVideo: '/api/video',
-  createVideo: '/api/video',
+  addVideo: '/api/add',
   deleteVideo: '/api/video',
 }
