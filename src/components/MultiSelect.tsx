@@ -5,8 +5,8 @@ import {
   faArrowUp,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { ControllerRenderProps } from 'react-hook-form';
-import { VideoWithCategory } from './AddVideoForm';
+import { ControllerRenderProps } from "react-hook-form";
+import { VideoWithCategory } from "./AddVideoForm";
 
 export type Item = {
   id: string;
@@ -17,12 +17,16 @@ type MultiSelectProps = {
   items: Item[];
   placeholder: string;
   field: ControllerRenderProps<VideoWithCategory, "category">;
+  isReset: boolean;
+  setIsReset: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const MultiSelect: React.FC<MultiSelectProps> = ({
   items,
   placeholder,
   field,
+  isReset = false,
+  setIsReset,
 }) => {
   const [selectedItems, setSelectedItems] = useState<Item[]>(field.value || []);
   const [opened, setIsOpened] = useState(false);
@@ -59,11 +63,17 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   }, [selectedItems, items]);
 
   useEffect(() => {
-    field.onChange(selectedItems)
+    field.onChange(selectedItems);
   }, [selectedItems]);
 
+  useEffect(() => {
+    if (isReset) {
+      setSelectedItems(field.value);
+      setIsReset(false);
+    }
+  }, [isReset]);
+
   function onDropDownClicked(newItem: Item) {
-    console.log("on dropdown clicked called");
     setSelectedItems([...selectedItems, newItem]);
   }
 
@@ -78,7 +88,9 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       ref={wrapperRef}
     >
       <div className="flex grow flex-wrap">
-        {selectedItems.length === 0 && <span className='p-2 pl-4'>{placeholder} </span>}
+        {selectedItems.length === 0 && (
+          <span className="p-2 pl-4">{placeholder} </span>
+        )}
         {selectedItems.map(({ id, value }) => (
           <span
             className="bg-slate-100 p-2 border rounded-md m-1"
@@ -107,7 +119,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       </span>
       {filteredItems.length > 0 && (
         <div
-          style={{ top: `${wrapperClientHeight+5}px` }}
+          style={{ top: `${wrapperClientHeight + 5}px` }}
           className={`w-full absolute bg-white left-0 ${
             opened ? "visible" : "invisible"
           } shadow-lg border rounded-md p-2`}

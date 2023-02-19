@@ -15,5 +15,9 @@ export default apiClient;
 
 export const deleteVideo = (id: number) =>
   apiClient.delete(`${videoURL.deleteVideo}/${id}`);
-export const addVideo = (params: Video & {category: string[]}) =>
+export const updateVideo = (params: Video & { category: string[] }) =>
+  apiClient.post(videoURL.updateVideo, params);
+export const getByIdCategory = (id: number) =>
+  apiClient.get(`${videoURL.getByIdCategory}/${id}`);
+export const addVideo = (params: Video & { category: string[] }) =>
   apiClient.post(videoURL.addVideo, params);

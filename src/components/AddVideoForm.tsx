@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useRequest from "../hooks/useRequest";
 import { addVideo } from "../api";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Video } from "../interfaces/video";
 import { Item, MultiSelect } from "./MultiSelect";
+import { updateVideo } from "./../api/index";
 
 const categoryItems: Item[] = [
   { id: "12", value: "Adventure" },
@@ -42,8 +43,20 @@ export interface VideoWithCategory extends Video {
   category: Item[];
 }
 
-const AddVideoForm = () => {
+interface Props {
+  initialValue?: Video;
+  initialCategory?: string[];
+  updateForm?: boolean;
+}
+
+const AddVideoForm = ({
+  initialValue,
+  initialCategory,
+  updateForm = false,
+}: Props) => {
   const [_addVideo, , addVideoRes] = useRequest(addVideo);
+  const [_updateVideo, , updateVideoRes] = useRequest(updateVideo);
+  const [isReset, setIsReset] = useState(false);
   const {
     register,
     handleSubmit,
@@ -57,25 +70,66 @@ const AddVideoForm = () => {
   const onSubmit: SubmitHandler<VideoWithCategory> = (
     data: VideoWithCategory
   ) => {
-    _addVideo({
-      video_id: data.video_id,
-      name: data.name,
-      description: data.description,
-      poster_path: data.poster_path,
-      video_path: data.video_path,
-      category: data.category?.map((x) => x.id) || [],
-    });
+    if (updateForm) {
+      _updateVideo({
+        video_id: data.video_id,
+        name: data.name,
+        description: data.description,
+        poster_path: data.poster_path,
+        video_path: data.video_path,
+        category: data.category?.map((x) => x.id) || [],
+      });
+    } else {
+      _addVideo({
+        video_id: data.video_id,
+        name: data.name,
+        description: data.description,
+        poster_path: data.poster_path,
+        video_path: data.video_path,
+        category: data.category?.map((x) => x.id) || [],
+      });
+    }
   };
 
   useEffect(() => {
-    console.log("addVideoRes: ", addVideoRes);
     if (addVideoRes?.addData?.affectedRows) {
-      reset();
+      reset({
+        video_id: undefined,
+        name: "",
+        description: "",
+        poster_path: "",
+        video_path: "",
+        category: [],
+      });
+      setIsReset(true);
       toast.success("Video addition success");
     } else if (addVideoRes?.message) {
       toast.error(addVideoRes.message);
     }
   }, [addVideoRes, reset]);
+
+  useEffect(() => {
+    if (updateVideoRes?.addData?.affectedRows) {
+      toast.success("Video addition success");
+    } else if (updateVideoRes?.message) {
+      toast.error(updateVideoRes.message);
+    }
+  }, [updateVideoRes, reset]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+
+    if (updateForm) {
+      const initialCategoryItems = initialCategory?.map((x) => ({
+        id: x,
+        value:
+          categoryItems[categoryItems.findIndex((element) => element.id === x)]
+            .value,
+      }));
+      reset({ ...initialValue, category: initialCategoryItems });
+      setIsReset(true);
+    }
+  }, []);
 
   return (
     <form
@@ -86,6 +140,9 @@ const AddVideoForm = () => {
         <label className="block text-gray-700 text-sm font-bold mb-2">ID</label>
         <input
           type="number"
+          min={1}
+          max={99999999}
+          disabled={updateForm}
           {...register("video_id", { required: true })}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
@@ -160,6 +217,8 @@ const AddVideoForm = () => {
                 items={categoryItems}
                 placeholder="Click Here"
                 field={field}
+                isReset={isReset}
+                setIsReset={setIsReset}
               />
             )}
           />
