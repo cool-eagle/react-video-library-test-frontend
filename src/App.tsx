@@ -8,6 +8,7 @@ import UpdateVideo from "./pages/UpdateVideo";
 import { useRecoilValue } from "recoil";
 import { modalState } from "./atoms/modalAtom";
 import Modal from "./components/Modal";
+import Footer from './components/Footer';
 
 function App() {
   const showModal = useRecoilValue(modalState);
@@ -21,6 +22,7 @@ function App() {
           <Route path="/add" element={<AddVideo />} />
           <Route path="/update" element={<UpdateVideo />} />
         </Routes>
+        <Footer />
         <Core />
       </BrowserRouter>
       {showModal && <Modal />}
