@@ -4,16 +4,16 @@ const Navbar = () => {
   const isAddActive = location.pathname.split("/")[1] === "add";
 
   return (
-    <nav className="w-full h-20 bg-slate-200 flex items-center justify-start">
-      <div className="text-lg font-light mx-8 bg-slate-200">
+    <nav className="w-full h-20 bg-slate-300 flex items-center justify-start">
+      <div className="text-lg font-light mx-20 mr-4 md:mx-8 bg-slate-300">
         The Video Library
       </div>
-      <div className="flex items-center gap-12 text-xl font-bold bg-slate-200">
+      <div className="flex items-center gap-12 text-xl font-bold bg-slate-300">
         <NavLink
           to="/"
           className={`${
             !isAddActive ? "text-red-500" : "hover:text-red-800"
-          } bg-slate-200`}
+          } bg-slate-300`}
         >
           Videos
         </NavLink>
@@ -21,7 +21,7 @@ const Navbar = () => {
           to="/add"
           className={`${
             isAddActive ? "text-red-500" : "hover:text-red-800"
-          } bg-slate-200`}
+          } bg-slate-300`}
         >
           Add Video
         </NavLink>
